@@ -1,7 +1,7 @@
 # Sumário
 
 - [VISÃO GERAL](#visão-geral)
-- [O QUE IRÁ APRENDER](#o-que-irÁ-aprender)
+- [O QUE IRÁ APRENDER](#o-que-irá-aprender)
 - [PARAMETRIZANDO ARQUIVOS E DOCUMENTOS](#parametrizando-arquivos-e-documentos)
     - [Conhecendo Regex e como utilizar para extrair os dados](#conhecendo-regex-e-como-utilizar-para-extrair-os-dados)
     - [Tutorial REGEX](#tutorial-regex)
@@ -82,7 +82,7 @@ Parametrizar dados utilizando expressões regulares - REGEX;
 ## Conhecendo Regex e como utilizar para extrair os dados 
 
 
-Se já está habituado com REGEX, basta utilizar os grupos nominados "(?<nomeDaVariavel>...)" e lembrar que essas variaveis abaixo são essenciais no preenchimento da tela anexo:
+Se já está habituado com REGEX, basta utilizar os grupos nominados "`(?<nomeDaVariavel>...)`" e lembrar que essas variaveis abaixo são essenciais no preenchimento da tela anexo:
 
 - numeroAnexo (preenche o número)
 
@@ -124,7 +124,7 @@ até então temos a nossa pesquisa "número do empenho: \d+/2025", a informaçã
 
 obs. na extensão a chave do valor que preenche o número do anexo é a "numeroAnexo"
 
-Para capturar essa informação da pesquisa montada vamos circular ela com esse molde: “(?<chave>informação a ser capturada)” e ela ficará assim "número do empenho: (?<numeroAnexo>\d+/2025)"
+Para capturar essa informação da pesquisa montada vamos circular ela com esse molde: “`(?<chave>informação a ser capturada)`” e ela ficará assim "número do empenho: `(?<numeroAnexo>\d+/2025)`"
 
 com isso criamos a primeira captura para definir o número do anexo;
 
@@ -187,7 +187,7 @@ Exemplos de uso:
 
     ```regex
 
-    (<telefone>\(\d{2}\) \d{5}-\d{4})
+    (?<telefone>\(\d{2}\) \d{5}-\d{4})
 
 ```
 
@@ -195,7 +195,7 @@ Exemplos de uso:
 
 ```regex
 
-(<email>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})
+(?<email>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})
 
 ```
 
@@ -203,7 +203,7 @@ Exemplos de uso:
 
 ```regex
 
-(<data>\d{2}/\d{2}/\d{4})
+(?<data>\d{2}/\d{2}/\d{4})
 
 ```
 
@@ -211,7 +211,7 @@ Exemplos de uso:
 
     ```regex
 
-    (<CPF>\d{3}\.\d{3}\.\d{3}-\d{2})
+    (?<CPF>\d{3}\.\d{3}\.\d{3}-\d{2})
 
     ```
 
@@ -219,7 +219,7 @@ Exemplos de uso:
 
     ```regex
 
-    (<CNPJ>\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})
+    (?<CNPJ>\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})
 
     ```
 
@@ -229,7 +229,7 @@ lembrando que sempre que possível utilize parte do texto que vem antes ou depoi
 
     ```regex
 
-    CNPJ: (<CNPJ>\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})
+    CNPJ: (?<CNPJ>\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})
 
     ```
 
@@ -324,7 +324,7 @@ Aplicando a expressão regular ao texto, o grupo nomeado `id` capturará "123abc
 
 O objetivo a ser alcançado:
 
-- anexar usando somente o nome do arquivo, essencial se você queira apenas utilizar a identificação automática;
+- anexar usando somente o nome do arquivo para seleção automática do tipo de anexo;
 
 - coletar dados a partir do texto do arquivo (data, numeroAnexo, nomeArvore, observacoes, outras informações que possam ser utilizadas no preenchimento de formulários, descrição do processo, e-mail etc.)
 
@@ -349,34 +349,32 @@ temos o arquivo "NF 123.pdf"
 
 queremos que a extensão insira e selecione "Nota Fiscal" e defina "123" como número do anexo;
 
+Vamos começar: 
 
-dada essa introdução da forma de obter os dados vamos parametrizar um arquivo:
-
-Abrir Extensão
+Abra Extensão
 
 ![Abrir Extensão](gifs/abrir_extensao.gif)
 
-Entrar em Configurar Anexo
+Entre em Configurar Anexo
 
 ![Entrar em Configurar Anexos](gifs/entrar_configurar_anexos.gif)
 
-Criar novo anexo
+Crie um novo anexo
 
 ![Novo Anexo](gifs/novo_anexo.gif)
 
-na aba "Propriedades e diretrizes de seleção do anexo" voce vai conseguir criar o principal regex para identificar o arquivo e indicar qual nome de anexo ele vai usar ao ser carregado no SEI, além de definir o nivel de acesso;
+na aba "Propriedades e diretrizes de seleção do anexo" voce vai conseguir criar o regex para executar no nome do arquivo que vai identificar qual nome de anexo ele vai usar ao ser carregado no SEI;
 
 Preencha os campos:
 
-nome: usar uma informação curta para você identificar a configuração para editar;
+- nome: usar uma informação curta para você identificar a configuração para editar;
 
-Anotação/Descrição: informações úteis do anexo, instruções de como gerar o arquivo e assim por diante;
+- Anotação/Descrição: informações úteis do anexo, instruções de como gerar o arquivo e assim por diante;
 
-Agora configure os campos Regex e Anexo selecionado para que o regex selecione o anexo desejado dessa forma:
+- Agora configure os campos Regex e Anexo selecionado para que o regex selecione o anexo desejado dessa forma:
 
-obs. Utilize o guia parametrizando para aprender um pouco sobre regex.
-
-"^NF (?<numeroAnexo>\d+\-\d{4}).pdf$" => "Nota fiscal";
+vamos montar o regex para fazer a identificação e capturar o a variavel "numeroAnexo"
+"`^NF (?<numeroAnexo>\d+\-\d{4}).pdf$" => "Nota fiscal`";
 
     ^: Indica o início da string. O nome do arquivo deve começar com "NF".
 
@@ -386,11 +384,11 @@ obs. Utilize o guia parametrizando para aprender um pouco sobre regex.
 
     (?<numeroAnexo>\d+\-\d{4}): Este é um grupo nomeado chamado numeroAnexo.
 
-    \d+: Corresponde a um ou mais dígitos.
+        \d+: Corresponde a um ou mais dígitos.
 
-    \-: Corresponde ao caractere hífen "-".
+        \-: Corresponde ao caractere hífen "-".
 
-    \d{4}: Corresponde exatamente a quatro dígitos.
+        \d{4}: Corresponde exatamente a quatro dígitos.
 
     .pdf: Corresponde literalmente aos caracteres ".pdf".
 
@@ -412,7 +410,7 @@ Dessa forma pode-se criar quantas configurações quiser, porem tem que tomar cu
 
 seguindo o exemplo anterior uma menos complexa
 
-"^NF (?<numeroAnexo>[^\.]+)" => "Nota fiscal";
+"`^NF (?<numeroAnexo>[^\.]+)`" => "Nota fiscal";
 
     ^: Este símbolo indica o início da string. Significa que a string deve começar com o padrão que segue.
 
