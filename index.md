@@ -322,15 +322,20 @@ Aplicando a expressão regular ao texto, o grupo nomeado `id` capturará "123abc
 
 ## Anexar utilizando - REGEX
 
-O objetivo a ser alcançado:
+### Objetivo:
 
 - anexar usando somente o nome do arquivo para seleção automática do tipo de anexo;
 
 - coletar dados a partir do texto do arquivo (data, numeroAnexo, nomeArvore, observacoes, outras informações que possam ser utilizadas no preenchimento de formulários, descrição do processo, e-mail etc.)
 
-A coleta de dados vai ocorrer em duas situações:
+Observações: 
+
+A coleta de dados vai ocorre em duas situações:
 
 A primeira é quando usar diretamente o botão "Anexar arquivo(s) (também dropando o arquivo na arvore dos documentos);
+
+Caso não tenha um arquivo de nota fiscal para seguir, utilize esse arquivo de modelo: [Modelo NF](arquivos/NF%20123.pdf)
+
 
 
 ![Anexar](gifs/anexar.gif)
@@ -342,12 +347,11 @@ A segunda é quando ele já foi inserido e é marcado a caixa de seleção, se t
 ![Anexar](gifs/selecionar_documento.gif)
 
 
+### Passo a passo - Primeira fase
 
 Vamos definir o que vai a extensão vai executar:
 
-temos o arquivo "NF 123.pdf"
-
-queremos que a extensão insira e selecione "Nota Fiscal" e defina "123" como número do anexo;
+temos o arquivo que abreviamos Nota fiscal pra NF seguido do número dela ("NF 123.pdf") e queremos que a extensão insira e selecione "Nota Fiscal" e defina "123" como número do anexo;
 
 Vamos começar: 
 
@@ -408,7 +412,7 @@ vamos montar o regex para fazer a identificação e capturar o a variavel "numer
 
 Dessa forma pode-se criar quantas configurações quiser, porem tem que tomar cuidado para que a uma configuração corresponda com o padrão de outra e entrem em conflito
 
-seguindo o exemplo anterior uma menos complexa
+seguindo uma abordagem menos exigente, que copia tudo depois de NF até o primeiro ponto:
 
 "`^NF (?<numeroAnexo>[^\.]+)`" => "Nota fiscal";
 
@@ -446,6 +450,18 @@ Diferenciar maiúsculas/minúsculas: marque caso queira que 'NF' seja diferente 
 
 
 salve e está feito seu primeiro atalho automático, teste nomeando um arquivo "NF 12345" ou "NF 12345-2025" dependendo da sua escolha
+
+### Passo a passo - Segunda fase
+
+Agora que configuramos a primeira aba ("Propriedades e diretrizes de seleção do anexo") vamos criar as propriedades que faltaram, como a data da nota fiscal além de capturar informações pra utilização na criação de um formulário:
+
+Agora abra a aba "Capturas extras - REGEX" e insira um modelo em branco:
+
+
+![Capturas extras - REGEX](gifs/capturas_extras_regex.gif)
+
+
+
 
 
 ## Anexar PDF
