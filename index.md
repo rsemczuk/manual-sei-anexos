@@ -334,7 +334,7 @@ A coleta de dados vai ocorre em duas situações:
 
 A primeira é quando usar diretamente o botão "Anexar arquivo(s) (também dropando o arquivo na arvore dos documentos);
 
-Caso não tenha um arquivo de nota fiscal para seguir, utilize esse arquivo de modelo: [Modelo NF](arquivos/NF%20123.pdf)
+Caso não tenha um arquivo de nota fiscal para seguir, utilize esse arquivo de modelo: [Modelo NF](arquivos/NF%202718.pdf)
 
 
 
@@ -371,11 +371,11 @@ na aba "Propriedades e diretrizes de seleção do anexo" voce vai conseguir cria
 
 Preencha os campos:
 
-- nome: usar uma informação curta para você identificar a configuração para editar;
+- nome: usar uma informação curta para você identificar a configuração para editar, nesse caso vamos usar "Nota Fiscal";
 
-- Anotação/Descrição: informações úteis do anexo, instruções de como gerar o arquivo e assim por diante;
+- Anotação/Descrição: informações úteis do anexo, instruções de como gerar o arquivo e assim por diante, vamos deixar essa informação para definir essa configuração: "Seleciona nota fiscal em documentos iniciados com NF";
 
-- Agora configure os campos Regex e Anexo selecionado para que o regex selecione o anexo desejado dessa forma:
+- Agora configure o campo "Regex" e "Anexo selecionado" para que o regex selecione o anexo desejado dessa forma:
 
 vamos montar o regex para fazer a identificação e capturar o a variavel "numeroAnexo"
 "`^NF (?<numeroAnexo>\d+\-\d{4}).pdf$" => "Nota fiscal`";
@@ -446,7 +446,7 @@ Essa regex é usada para identificar strings que começam com "NF " e capturar o
 
 Anexo que será ser selecionado: ser o regex corresponder será selecionado o anexo escolhido aqui, (é possível selecionar vários porem selecionará o primeiro que existir no SEI).
 
-Diferenciar maiúsculas/minúsculas: marque caso queira que 'NF' seja diferente de "nf" no seu regex.
+Diferenciar maiúsculas/minúsculas: marque caso queira que 'NF' seja diferente de "nf" no seu regex, nesse caso vamos deixar desmarcado para aceitar tando NF quanto outras variações como nf, Nf ou nF.
 
 
 salve e está feito seu primeiro atalho automático, teste nomeando um arquivo "NF 12345" ou "NF 12345-2025" dependendo da sua escolha
@@ -455,12 +455,96 @@ salve e está feito seu primeiro atalho automático, teste nomeando um arquivo "
 
 Agora que configuramos a primeira aba ("Propriedades e diretrizes de seleção do anexo") vamos criar as propriedades que faltaram, como a data da nota fiscal além de capturar informações pra utilização na criação de um formulário:
 
-Agora abra a aba "Capturas extras - REGEX" e insira um modelo em branco:
+
+Agora abra a aba "Capturas extras - REGEX" para configurar parametrizar alguns dados;
+
+- marque Ler texto do arquivo
+
+- Baixe o arquivo "NF 2718.pdf" e abra ele na extensão para usar como teste;
+
+
+![Capturas extras - REGEX](gifs/anexar_1_selecionar.gif)
+
+
+Agora com o texto carregado vamos localizar essa informação no texto para parametrizar o "nome", o "cpf/cnpf" e a "data":
+
+![Capturas extras - REGEX](gifs/nota_data_nome.png)
+
+```
+...
+NOME / RAZÃO SOCIAL	CNPJ / CPF	DATA DA EMISSÃO
+FULANO DE TAL	000.000.00-00	22/05/2024
+...
+
+``` 
+
+agora vamos criar uma captura em branco:
 
 
 ![Capturas extras - REGEX](gifs/capturas_extras_regex.gif)
 
 
+vamos criar um regex para capturar as 3 informações
+
+vamos manter a primeira linha como um identificador para a segunda linha, assim o regex ficará assim:
+
+obs. não é possível visualizar facilmente mas "NOME / RAZÃO SOCIAL",  "CNPJ / CPF" e "DATA DA EMISSÃO" estão sendo separados por uma tabulação e não por um espaço simple e o mesmo ocorre na linha 2 que estão os valores que pretendemos capturar, assim podemos substituir a tabulação pelo caracter "\t",
+vamos fazer as substituições
+
+```
+NOME / RAZÃO SOCIAL\tCNPJ / CPF\tDATA DA EMISSÃO
+FULANO DE TAL\t000.000.00-00\t22/05/2024
+```
+
+feito isso vamos criar as capturas:
+
+```
+NOME / RAZÃO SOCIAL\tCNPJ / CPF\tDATA DA EMISSÃO
+(?<nome>[^\t]+)\t(?<cpfCnpj>[^\t]+)\t(?<data>.+)
+```
+
+obs. o texto gerado do arquivo pdf mantém separado por tabulação "\t" textos distantes que ficam na mesma linha, por isso é interessante memorizar essa lógica de regex "`(?<nome>[^\t]+)\t`" pois pode ser bem útil para parametrizar textos linhas de tabelas ou um texto que a linha anterior são os titulos e a linha seguinte são os valores.
+
+
+agora vamos substituir a quebra de linha pelo seu caracter "\n"
+
+```
+NOME / RAZÃO SOCIAL\tCNPJ / CPF\tDATA DA EMISSÃO\n(?<nome>[^\t]+)\t(?<cpfCnpj>[^\t]+)\t(?<data>.+)
+```
+
+agora que terminamos o regex para capturar as informações e vamos inserir na captura em branco que criamos e preencha o nome:
+
+![Capturas extras - REGEX](gifs/preencher_captura_branco.gif)
+
+
+agora vamos repetir o processo e criar para capturar o número da nota:
+texto que identifica a nota
+```
+Nº. 000.002.718
+```
+
+```
+^Nº. [0\.]*(?<numeroAnexo>[1-9][0-9\.]*)
+```
+
+1. `^`: Indica o início da linha. Isso garante que a correspondência ocorra apenas se o padrão estiver no começo da linha. (**marque a opção multlinha para que isso funcione**).
+2. `Nº. `: Corresponde literalmente ao texto "Nº. " (com um espaço após o ponto). Este é o prefixo que identifica o número da nota.
+3. `[0\.]*`: Corresponde a zero ou mais ocorrências de '0' ou '.'. Isso permite que o número da nota tenha zeros à esquerda e pontos como separadores.
+4. `(?<numeroAnexo>[1-9][0-9\.]*)`: Esta é uma captura nomeada chamada `numeroAnexo`.
+   - `[1-9]`: Corresponde a qualquer dígito de 1 a 9. Isso garante que o número não comece com zero.
+   - `[0-9\.]*`: Corresponde a zero ou mais ocorrências de qualquer dígito (0-9) ou ponto ('.'). Isso permite capturar o restante do número da nota, que pode incluir pontos como separadores.
+
+
+
+com isso temos as propriedades nome, cpfCnpj, data e numeroAnexo capturadas do texto do arquivo, abra a aba "Valores carregados" e confira se essas propriedades carregaram com os valores corretamente.
+
+![Capturas extras - REGEX](gifs/valores_carregados.gif)
+
+feito isso agora é só salvar
+
+vamos agora configurar um formulário e usar essas informações capturadas
+
+e veja também outra forma de capturar essas informações em "Anexar PDF"
 
 
 
@@ -468,7 +552,40 @@ Agora abra a aba "Capturas extras - REGEX" e insira um modelo em branco:
 
 ## Formulários 
 
- 
+Abra a tela de formulários e crie um novo formulário:
+
+ ![Abrir Formularios](gifs/abrir_formularios.gif)
+
+Na aba "informações basicas" preencha
+- Formulário: selecione um formulário;
+- Nome na arvore: preencha caso queira deixar uma informação extra no nome do formulário;
+- Nível de acesso: selecione o nível de acesso;
+- Observações: preencha caso queira incluir observações no formulário
+- Selecione entre "Documento do sistema" ou "Número modelo" ou "Texxto padrão"
+
+Na aba "informações da extensão" preencha:
+
+- Descreva o que o formulário faz para quando o mouse estiver em cima
+- Selecione quais documentos selecionados que ativará esse formulário
+- Selecione a quantidade mínima de anexos para ativar o formulário
+- Adicione uma cor para o botão
+- Filtrar anexos que serão usados na sua edição
+- Atalho gerar formulário - defina se essa configuração se ativará ou não, padrão é ativar
+- Sempre mostrar formulário - marque se quiser que o atalho fique sempre ativo
+
+Na aba "Pesquisar, substituir, remover ou adicionar texto no modelo" preencha
+
+- 
+
+
+
+
+
+
+
+
+
+
 
 ## Processos 
 
