@@ -40,9 +40,14 @@ Você terá liberdade para adotar as melhores práticas que considerar para o se
 
 # O QUE IRÁ APRENDER 
 
+
+
 Parametrizar arquivos e documentos para extrair dados; 
 
-Criar configurações aproveitando os dados para: 
+
+- utilizar a Função "Inserir Anexo(s)"
+
+
 
 - inserir formulários;
 
@@ -72,10 +77,58 @@ Utilizar outras funções como:
 
  
 
+# FUNÇÃO INSERIR ANEXOS
+    
+os anexos podem ser inseridos através do botão "Anexar arquivo(s)"
+
+![FUNÇÃO INSERIR ANEXOS](gifs/botao_anexar.png)
+
+ou arrastando diretamente na arvore
+
+![FUNÇÃO INSERIR ANEXOS](gifs/arrastar_anexo.gif)
+
+
+Essa operação de anexar tem as seguintes funções nativas que podem ser aproveitadas;
+
+1- se o arquivo iniciar com "fatura 123" por padrão o tipo do documento externo será "fatura" e o número será "123", esse é um exemplo, isso se existir fatura como documento externo, caso não exista ela tentará selecionar anexo ou anexos se também existir.
+
+2- é possívem incluir essas chaves abaixo no nome do arquivo para alterar propriedades do anexo
+
+- ".caa" altera o tipo de conferência para "Cópia Autenticada Administrativamente"
+- ".cac" altera o tipo de conferência para "Cópia Autenticada por Cartório"
+- ".cs" altera o tipo de conferência para "Cópia Simples"
+- ".do" altera o tipo de conferência para "Documento Original"
+- ".ip" altera o acesso para restrito e seleciona "Informacao pessoal"
+- ".28-01-2025" altera a data do documento externo para 28/01/2025
+escreva o nome de um arquivo como "fatura 123.caa.ip.25-01-2025" e faça um teste para ver o comportamento
+
+
+![FUNÇÃO INSERIR ANEXOS](gifs/teste_fatura_keys.png)
+
+como resultado o anexo vai ter os seguintes valores preenchidos:
+
+1. Tipo do Documento: Fatura
+2. Data do Documento: 20/01/2028
+3. Número: 123
+4. Formato: Digitalizado nesta Unidade
+5. Tipo de Conferência: Cópia Autenticada Administrativamente
+6. Nível de Acesso: Restrito => Informação Pessoal (Art. 31 da Lei nº 12.527/2011)
+
+
+Essa é a função basica, confira a seguir as funções avançadas para anexar, criar formulários e gerar processos inteiros em 1 click (modo de falar, mas dois ou três resolvem).
+
+
+
+   
  
 # PARAMETRIZANDO ARQUIVOS E DOCUMENTOS 
 
 Parametrizar dados utilizando expressões regulares - REGEX; 
+
+Aprender como trabalhar com Regex Essa crucial crucial para utilizar 100% do que a extensão pode oferecer.
+
+Outra forma de mapear é exclusiva de arquivos PDF onde as informações venham na mesma posição, veja em [Anexar PDF](#anexar-pdf) essa forma de mapear.
+
 
  
 
@@ -351,7 +404,7 @@ A segunda é quando ele já foi inserido e é marcado a caixa de seleção, se t
 
 Vamos definir o que vai a extensão vai executar:
 
-temos o arquivo que abreviamos Nota fiscal pra NF seguido do número dela ("NF 123.pdf") e queremos que a extensão insira e selecione "Nota Fiscal" e defina "123" como número do anexo;
+temos o arquivo que abreviamos Nota fiscal pra NF seguido do número dela ("NF 2718.pdf") e queremos que a extensão insira e selecione "Nota Fiscal" e defina "2718" como número do anexo;
 
 Vamos começar: 
 
@@ -552,30 +605,76 @@ e veja também outra forma de capturar essas informações em "Anexar PDF"
 
 ## Formulários 
 
-Abra a tela de formulários e crie um novo formulário:
+
+Muitos formulários que trabalhamos são como esse abaixo, eles vem quase prontos onde temos que apenas adicionar uma ou outra informação para que fique pronto.
+
+![Abrir Formularios](gifs/formulario_inicial.png)
+
+Nesse caso temos que adicionar o número da nota fiscal e o link na parte destacada "Nota(s) Fiscal(is) nº ___ , (link)", portanto vamos definir que essa é a primeira forma de trabalhar com formulário, onde alteramos o "Documento do sistema" conforme nossa necessidade;
+
+A segunda forma é utilizar um "Texto padrão" para substituir o corpo principal da mensagem e deixa-lo conforme nossa necessidade, mas esse método se restringe apenas ao corpo, geralmente cabeçalhos e rodapes não são possíveis utilizar o texto padrão;
+
+A terceira forma de traballhar com formulário é criar um modelo a partir do original e utilizar o seu número, essa forma permite personalizar tanto o cabeçalho quanto o rodapé;
+
+Obs. ao trabalhar com a primeira forma é possível editar tanto o cabeçalho quanto o rodapé, mas desde que esteja liberado pois a maioria dos formulários só deixam disponível alterar o corpo da mensagem.
+
+Dicas. 
+ 1. criando uma biblioteca de modelos com texto padrão ficará restrito apenas a sua unidade;
+ 2. criando uma biblioteca de modelos a partir de um processo SEI, assinando os modelos e deixando público eles ficarão disponíveis para outras unidades;
+ 3. criando uma biblioteca de modelos a partir de um processo SEI, deixar os modelos sem assinatura fará com que os modelos fiquem disponíveis apenas para a unidade atual, mas permitirá fazer alterações;
+ 4. trabalhando com o "Documento do sistema" será mais trabalhoso, mas não terá as restrições acima.
+
+Vamos aproveitar o trabalho que fizemos para parametrizar a nota fiscal 2718 feita no menu "Anexar utilizando - REGEX" e vamos trabalhar com a primeira forma, utilizar o "Documento do sistema" e fazer as edições pontualmente;
+
+Vou utilizar o formuário "Contratos: Recebimento do Objeto", fique a vontade para utilizar outro caso não exista e assim seguir o tutorial.
+ 
+### Passo 1 - Abra a tela de formulários e crie um novo formulário:
 
  ![Abrir Formularios](gifs/abrir_formularios.gif)
 
-Na aba "informações basicas" preencha
-- Formulário: selecione um formulário;
-- Nome na arvore: preencha caso queira deixar uma informação extra no nome do formulário;
+No campo: "Nome da configuração" Insira um nome para a configuração do Formulário, vou utilizar o prório nome do formulário: "Contratos: Recebimento do Objeto"
+
+
+### Passo 2 - Na aba "informações basicas" preencha
+- Formulário: selecione um formulário ("Contratos: Recebimento do Objeto");
+- Nome na arvore: preencha caso queira deixar uma informação extra no nome do formulário; normalmente deixo vazio mas vou deixar com a lista de nota selecionadas para verem o resultado "`[[LISTA_POR_EXTENSO_REDUZIDA_SEM_LINK]]`"
 - Nível de acesso: selecione o nível de acesso;
-- Observações: preencha caso queira incluir observações no formulário
-- Selecione entre "Documento do sistema" ou "Número modelo" ou "Texxto padrão"
+- Observações: preencha caso queira incluir observações no formulário; normalmente deixo vazio mas vamos adicionar um texto para ver o resultado "`criado por: [[NOME_USUARIO]], documento: [[nomeCompleto]], [[cpfCnpj]], [[nome]]`"
+- Selecione entre "Documento do sistema" ou "Número modelo" ou "Texto padrão"; nesse caso deixe marcado "Documento do sistema";
 
-Na aba "informações da extensão" preencha:
+### Passo 3 - Na aba "informações da extensão" preencha:
 
-- Descreva o que o formulário faz para quando o mouse estiver em cima
-- Selecione quais documentos selecionados que ativará esse formulário
-- Selecione a quantidade mínima de anexos para ativar o formulário
-- Adicione uma cor para o botão
-- Filtrar anexos que serão usados na sua edição
-- Atalho gerar formulário - defina se essa configuração se ativará ou não, padrão é ativar
-- Sempre mostrar formulário - marque se quiser que o atalho fique sempre ativo
+- Descreva o que o formulário faz para quando o mouse estiver em cima: Escreva "recebimento do Objeto:\n\t selecione pelo menos uma nota fiscal para gerar o formulário"
+- Selecione quais documentos selecionados que ativará esse formulário: Escolha o anexo que você quer que o formulário aparece, no meu caso vou escolher "Nota Fiscal"
+- Selecione a quantidade mínima de anexos para ativar o formulário: se o seu formulário precisar de mais de um tipo de anexo coloque a quantidade aqui, ele irá bloquear a inserção do formulário se não atingir essa quantidade mínima; mas vou deixar 0;
+- Adicione uma cor para o botão;
+- Filtrar anexos que serão usados na sua edição; por exemplo na arvore tenho 2 anexos, um boleto e uma nota fiscal, no formulários temos disponíveis algumas listas de anexos selecionados como `[[LISTA_POR_EXTENSO_REDUZIDA]]`, se adicionarmos essa lista no texto que vamos substituir a frente "`Nota(s) Fiscal(is) nº ___ , (link)`" assim "`Nota(s) Fiscal(is) [[LISTA_POR_EXTENSO_COMPLETA]]`" vamos ter o boleto como intruso nessa lista, a lista ficará assim "`Nota(s) Fiscal(is) Nota Fiscal 2.718 (1423422) e Boleto 4654 (1423436)`", para que isso não ocorra insira apenas a "Nota Fiscal" nesse filtro;
+- Atalho gerar formulário - defina se essa configuração se ativará ou não, padrão é ativar; deixe ativado
+- Sempre mostrar formulário - marque se quiser que o atalho fique sempre ativo;deixe desativado pois o intuito do formulário aparecer somente quando selecionarmos a nota fiscal;
 
-Na aba "Pesquisar, substituir, remover ou adicionar texto no modelo" preencha
+### Passo 4 - Agora entre na aba "Pesquisar, substituir, remover ou adicionar texto no modelo":
 
-- 
+ ![Abrir Formularios](gifs/pesquisar_substituir.png)
+
+ Utilize o botão "Adicionar substituição/acão" na coluna da esquerda para criar quantas substituições precisar, por enquando vamos realizar somente uma substituição
+
+ 1. no campo "Texto para Procurar" adicione o texto que queremos substituir `Nota(s) Fiscal(is) nº ___ , (link)`
+ 2. no campo "Ação" selecione "`Substituir apenas o texto encontrado`"
+ 3. no campo "Substituir por" adicione o texto que substuirá o valor inicial, vamos usar uma das listas de objetos selecionados para trazer o nome do anexo e o link, nesse caso vamos usar "`[[LISTA_POR_EXTENSO_COMPLETA]]`", assim o texto "`Nota(s) Fiscal(is) [[LISTA_POR_EXTENSO_COMPLETA]]`"
+ 4. tem opção de alterar o esli do paragrafo, nesse caso vamos selecinar o que da espaçamento na primeira linha "Texto_Justificado_Recuo_Primeira_Linha";
+
+
+Agora salve a configuração 
+
+ ![Abrir Formularios](gifs/novo_salvar.png)
+
+"Contratos: Recebimento do Objeto"
+
+
+
+
+
+
 
 
 
