@@ -1,0 +1,1 @@
+Parametrização utilizando o texto:
