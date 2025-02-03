@@ -4,19 +4,14 @@ Este é um manual para utilização básica e avançada da extensão “SEI-ANEX
 
 Basicamente você irá aproveitar dados de documentos do sei, de arquivos, ou até criar um banco de dados internamente para automatizar os procedimentos diários que envolvem o procedimento anexar, criar formulário e gerar processo.
 
-Com isso, o objetivo é realmente automatizar os procedimentos diários realizados no SEI, garantindo eficiência e consistência e além de aprimorar qualidade do serviço prestado.
+Com isso, o objetivo é tornar os procedimentos diários realizados no SEI, garantindo eficiência e consistência e além de aprimorar qualidade do serviço prestado.
 
 Além da automatização informada acima, a extensão oferece algumas outras ferramentas, como um filtro para gerenciar os processos.
 
 Essa ferramenta é totalmente gratuita para a utilização e te da total liberdade construir suas próprias configurações.
 
-Mas se gostar lembre-se de apoiar monetariamente através de uma doação recorrente, isso ajudará no desenvolvimento e continuidade da extensão (pix regsemc@gmail.com).
+Se gostar lembre-se de apoiar através de uma doação recorrente, isso ajudará no desenvolvimento e continuidade da extensão (pix regsemc@gmail.com).
 
-Paralelamente estarei oferecendo os seguintes serviços PAGOS:
-* construção ou assessoria na criação de configurações (R$/H);
-* armazenar configurações criadas dentro do instalador da extensão, para quando instalar ou atualizar elas sejam carregadas automaticamente (assinatura mensal/anual).
-
-Caso queira contratar esses serviços entre em contato através do e-mail regsemc@gmail.com.
 
 # O QUE IRÁ APRENDER 
 
